@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: remote-signer-controller
+  namespace: kube-system
+  labels:
+    k8s-app: remote-signer
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ''
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: remote-signer-controller
+      namespace: kube-system
+      labels:
+        k8s-app: remote-signer
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      serviceAccountName: certificate-controller
+      containers:
+        - name: remote-signer-controller
+          image: kubeup/kube-remote-signer:latest
+          command:
+          - /kube-remote-signer
+          env:
+            - name: REMOTE_SIGNER_REMOTE
+              valueFrom:
+                secretKeyRef:
+                  name: remote-signer-config
+                  key: REMOTE_SIGNER_REMOTE
+            - name: REMOTE_SIGNER_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: remote-signer-config
+                  key: REMOTE_SIGNER_AUTH_KEY

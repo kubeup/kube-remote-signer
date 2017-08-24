@@ -1,0 +1,19 @@
+package: github.com/kubeup/kube-remote-signer
+import:
+- package: github.com/cloudflare/cfssl
+  version: db0d0650b6496bfe8061ec56a92edd32d8e75c30
+  subpackages:
+  - config
+  - signer
+  - signer/remote
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: k8s.io/kubernetes
+  version: 1.7.4
+  subpackages:
+  - pkg/controller
+- package: k8s.io/client-go
+  version: 4.0.0
+- package: k8s.io/apiserver
+  version: bd580877ac18afb9db52510f47da3945dcc35e40
